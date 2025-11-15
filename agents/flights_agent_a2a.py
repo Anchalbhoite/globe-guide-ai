@@ -1,43 +1,30 @@
 from google.adk.tools import FunctionTool
-
+from google.adk.agents.llm_agent import LlmAgent
+from google.adk.models.google_llm import Gemini
 import requests
+import os
 
-# -----------------------------
-# Remote Flight API Client
-# -----------------------------
+FLIGHTS_SERVER_URL = os.getenv("FLIGHTS_SERVER_URL", "http://localhost:8001")
 
-def remote_flight_search(source: str, destination: str, date: str):
-    """
-    name: search_flights
-    description: Search for flights from A2A flight server.
-    """
-    url = "http://localhost:8001/search_flights"
+def remote_flight_search(origin: str, destination: str, date: str):
+    """Call A2A flights server"""
     payload = {
-        "source": source,
+        "origin": origin,
         "destination": destination,
         "date": date
     }
-    res = requests.post(url, json=payload)
+    res = requests.post(f"{FLIGHTS_SERVER_URL}/tasks/search_flights", json=payload)
     return res.json()
 
-
-flight_tool = FunctionTool(
-    func=remote_flight_search
-)
-
-# -----------------------------
-# Flights Agent
-# -----------------------------
-from google.adk.agents import LlmAgent
-from google.adk.models.google_llm import Gemini
+# FIX: remove name=
+flight_tool = FunctionTool(remote_flight_search)
 
 flights_agent = LlmAgent(
     name="flights_agent",
     model=Gemini(model="gemini-2.5-flash-lite"),
     instruction="""
-        You are a flight search assistant.
-        Use the search_flights tool to find flights.
-        Always return structured flight results.
+    You help with flight search. 
+    Always call the remote_flight_search tool to fetch real flight data.
     """,
-    tools=[flight_tool]
+    tools=[flight_tool],
 )
