@@ -1,0 +1,29 @@
+# --- Google ADK & A2A ---
+google-genai
+google-adk[a2a]
+
+
+# --- FastAPI Server for A2A ---
+fastapi~=0.115.0
+uvicorn[standard]~=0.30.0
+
+# --- Travel Data & APIs ---
+requests~=2.32.3
+python-dotenv~=1.0.1
+
+# --- Geolocation / Maps Helpers ---
+geopy~=2.4.1
+
+# --- Optional: HTML generation & URLs for Travel Agent ---
+jinja2~=3.1.4
+
+# --- Observability & Logging ---
+loguru~=0.7.2
+
+# --- Async Tools ---
+httpx~=0.27.2
+aiohttp~=3.9.5
+
+# --- General Utils ---
+pydantic~=2.8.2
+typing_extensions~=4.12.2
